@@ -1,0 +1,234 @@
+swagger: "2.0"
+info:
+  description: "The minesweeper API."
+  version: "1.0.0"
+  title: "Minesweeper API"
+  contact:
+    email: "joaquincosta@gmail.com"
+host: "example.server"
+basePath: "/minesweeper"
+schemes:
+- "http"
+paths:
+  /boards:
+    post:
+      tags:
+      - "boards"
+      summary: "Create a new minesweeper board"
+      operationId: "createBoard"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name"
+        required: true
+        type: "string"
+      - name: "body"
+        in: "body"
+        description: "Create minesweeper board"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateBoardDefinition"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/IdDefinition"
+
+  
+  /boards/{boardId}:
+    get:
+      tags:
+      - "boards"
+      summary: "Retrieve a board by id"
+      operationId: "retrieveBoard"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name"
+        required: true
+        type: "string"
+      - name: "boardId"
+        in: "path"
+        description: "The board indentifier"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/BoardDefinition"
+    
+    patch:
+      tags:
+      - "boards"
+      summary: "Update a board"
+      operationId: "updateBoard"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name"
+        required: true
+        type: "string"
+      - name: "boardId"
+        in: "path"
+        description: "The board indentifier"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Update board body"
+        required: true
+        schema:
+          $ref: "#/definitions/UpdateBoardDefinition"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/BoardDefinition"
+    
+  /users:
+    post:
+      tags:
+      - "users"
+      summary: "Create a user"
+      operationId: "createUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Create a minesweeper user"
+        required: true
+        schema:
+          $ref: "#/definitions/UserCreationDefinition"
+      responses:
+        "200":
+          description: "Ok"
+          
+  /users/{userName}:
+    get:
+      tags:
+      - "users"
+      produces:
+        - "application/json"    
+      parameters:
+      - name: "userName"
+        in: "path"
+        description: "The user name"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/UserDefinition"  
+        
+  
+definitions:
+  
+  IdDefinition:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        
+  UserCreationDefinition:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      
+  CreateBoardDefinition:
+    type: "object"
+    required:
+    - "rows"
+    - "columns"
+    - "mines"
+    properties:
+      rows:
+        type: "integer"
+      columns:
+        type: "integer"
+      mines:
+        type: "integer"
+        
+  BoardDefinition:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        enum:
+        - "playing"
+        - "won"
+        - "game_over"
+      cells:
+        type: "array"
+        items:
+          $ref: "#/definitions/CellDefinition"
+          
+  
+  CellDefinition:
+    type: "object"
+    properties:
+      row:
+        type: "integer"
+      column:
+        type: "integer"
+      status:
+        type: "string"
+        enum:
+        - "hide"
+        - "revealed"
+        - "question"
+        - "flag"
+  
+  UpdateBoardDefinition:
+    type: "object"
+    properties:
+      row:
+        type: "integer"
+      column:
+        type: "integer"
+      type:
+        type: "string"
+        enum:
+        - "reveal"
+        - "question"
+        - "flag"
+  
+  UserDefinition:
+    type: "object"
+    properties:
+      boards:
+        type: "array"
+        items: 
+          $ref: "#/definitions/UserBoardDefinition"
+  
+  UserBoardDefinition:
+    type: "object"
+    properties:
+      id: 
+        type: "string"
+      status:
+        type: "string"
+        enum:
+        - "open"
+        - "won"
+        - "lost"
+
+    
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
