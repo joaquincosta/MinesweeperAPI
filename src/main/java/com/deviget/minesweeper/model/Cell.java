@@ -1,21 +1,21 @@
 package com.deviget.minesweeper.model;
 
 import com.deviget.minesweeper.exception.PumException;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 @Setter
+@Builder
 @EqualsAndHashCode
 public class Cell {
 
   private Boolean revealed;
-  private Boolean isBomb;
+  private Boolean isMine;
   private MarkType mark;
   private List<Cell> neighbors;
 
@@ -23,11 +23,11 @@ public class Cell {
     if (revealed || marked()) {
       return;
     }
-    if (isBomb) {
+    if (isMine) {
       throw new PumException();
     }
     revealed = Boolean.TRUE;
-    if (neighbors.stream().noneMatch(Cell::getIsBomb)) {
+    if (neighbors.stream().noneMatch(Cell::getIsMine)) {
       neighbors.stream().forEach(Cell::reveal);
     }
   }
@@ -37,10 +37,10 @@ public class Cell {
   }
 
   private void reveal() {
-    if (isBomb || revealed || marked()) {
+    if (isMine || revealed || marked()) {
       return;
     }
-    if (neighbors.stream().noneMatch(Cell::getIsBomb)) {
+    if (neighbors.stream().noneMatch(Cell::getIsMine)) {
       revealed = Boolean.TRUE;
       neighbors.stream().forEach(Cell::reveal);
     }

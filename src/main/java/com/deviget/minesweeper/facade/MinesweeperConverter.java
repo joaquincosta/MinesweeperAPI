@@ -35,10 +35,11 @@ public class MinesweeperConverter {
       List<CellDTO> cells = new ArrayList<>();
       List<List<Cell>> grid = board.getGrid();
       for (int row = 0 ; row < grid.size() ; row++) {
-        for (int column = 0 ; column < grid.size() ; column++) {
+        for (int column = 0 ; column < grid.get(row).size() ; column++) {
           cells.add(convertCell(grid.get(row).get(column), row, column));
         }
       }
+      boardDTO.setCells(cells);
       return boardDTO;
     }
 
