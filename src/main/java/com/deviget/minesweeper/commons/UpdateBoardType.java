@@ -1,6 +1,6 @@
 package com.deviget.minesweeper.commons;
 
-public enum UpdateBoardTypes {
+public enum UpdateBoardType {
   REVEAL,
   QUESTION,
   FLAG;

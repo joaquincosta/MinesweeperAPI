@@ -44,9 +44,10 @@ public class MinesweeperController {
 
   @ResponseBody
   @PatchMapping("/boards/{boardId}")
-  public ResponseEntity<BoardDTO> updateBoard(@RequestBody UpdateBoardBody body, @RequestParam String username) {
-
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  public ResponseEntity<BoardDTO> updateBoard(@RequestBody UpdateBoardBody body, @PathVariable String boardId,
+                                              @RequestParam String username) {
+    BoardDTO boardDTO = minesweeperFacade.updateBoard(body, boardId, username);
+    return new ResponseEntity<>(boardDTO, HttpStatus.OK);
   }
 
   @PostMapping("/users")

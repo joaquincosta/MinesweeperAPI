@@ -1,5 +1,6 @@
 package com.deviget.minesweeper.service;
 
+import com.deviget.minesweeper.exception.DuplicatedUserException;
 import com.deviget.minesweeper.exception.UserNotFoundException;
 import com.deviget.minesweeper.model.Board;
 import com.deviget.minesweeper.model.User;
@@ -7,6 +8,7 @@ import com.deviget.minesweeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -17,9 +19,10 @@ public class UserService {
 
   public void createUser(final String username) {
     Optional<User> optionalUser = userRepository.retrieve(username);
-    if (optionalUser.isEmpty()) {
-      userRepository.store(User.builder().username(username).build());
+    if (!optionalUser.isEmpty()) {
+      throw new DuplicatedUserException(username);
     }
+    userRepository.store(User.builder().username(username).boards(new ArrayList<>()).build());
   }
 
   public User findUser(final String username) {

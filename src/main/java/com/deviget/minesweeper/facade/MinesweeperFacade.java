@@ -4,10 +4,10 @@ import com.deviget.minesweeper.dto.BoardDTO;
 import com.deviget.minesweeper.dto.CreateBoardBody;
 import com.deviget.minesweeper.dto.CreateUserBody;
 import com.deviget.minesweeper.dto.IdDTO;
+import com.deviget.minesweeper.dto.UpdateBoardBody;
 import com.deviget.minesweeper.dto.UserDTO;
 import com.deviget.minesweeper.exception.BoardAndUserNotFoundException;
-import com.deviget.minesweeper.exception.BoardNotFoundException;
-import com.deviget.minesweeper.exception.UserNotFoundException;
+import com.deviget.minesweeper.model.Board;
 import com.deviget.minesweeper.model.User;
 import com.deviget.minesweeper.service.BoardService;
 import com.deviget.minesweeper.service.UserService;
@@ -22,6 +22,7 @@ public class MinesweeperFacade {
   private BoardService boardService;
   @Autowired
   private UserService userService;
+  @Autowired
   private ConversionService conversionService;
 
   public IdDTO createBoard(final CreateBoardBody body, final String username) {
@@ -44,5 +45,13 @@ public class MinesweeperFacade {
   public UserDTO retrieveUser(final String userName) {
     User user = userService.findUser(userName);
     return conversionService.convert(user, UserDTO.class);
+  }
+
+  public BoardDTO updateBoard(final UpdateBoardBody body, final String boardId, final String username) {
+    if (!userService.matchUserWithBoard(username, boardId)) {
+      throw new BoardAndUserNotFoundException(boardId, username);
+    }
+    Board updatedBoard = boardService.updateBoard(boardId, body.getRow(), body.getColumn(), body.getType());
+    return conversionService.convert(updatedBoard, BoardDTO.class);
   }
 }

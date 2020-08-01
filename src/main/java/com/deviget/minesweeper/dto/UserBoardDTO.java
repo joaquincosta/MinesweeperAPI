@@ -1,10 +1,10 @@
 package com.deviget.minesweeper.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 public class UserBoardDTO {
