@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -16,11 +19,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Setter
 @EqualsAndHashCode
+@Entity
 public class Board {
-
+  @Id
   private String id;
   private BoardStatus status;
-  private List<List<Cell>> grid;
+  @OneToMany
+  private List<Row> grid;
 
   public Board click(final Integer row, final Integer column) {
     if (grid.get(row).get(column).getIsMine()) {
@@ -37,7 +42,7 @@ public class Board {
     AtomicReference<Integer> mines = new AtomicReference<>(0);
     AtomicReference<Integer> revealedCells = new AtomicReference<>(0);
     grid.stream().forEach(row -> {
-      row.stream().forEach(cell -> {
+      row.getColumns().stream().forEach(cell -> {
         if (cell.getIsMine()) {
           mines.getAndSet(mines.get() + 1);
         } else if (cell.getRevealed()) {
@@ -46,7 +51,7 @@ public class Board {
       });
     });
 
-    return (mines.get() + revealedCells.get()) == (grid.size() * grid.get(0).size());
+    return (mines.get() + revealedCells.get()) == (grid.size() * grid.get(0).getColumns().size());
   }
 
   private void reveal(final Integer row, final Integer column) {
@@ -104,7 +109,7 @@ public class Board {
 
   private Boolean validPosition(final Pair<Integer, Integer> position) {
     Boolean validRow = position.getLeft() >= 0 && position.getLeft() < grid.size();
-    Boolean validColumn = position.getRight() >= 0 && position.getRight() < grid.get(0).size();
+    Boolean validColumn = position.getRight() >= 0 && position.getRight() < grid.get(0).getColumns().size();
     return validRow && validColumn;
   }
 

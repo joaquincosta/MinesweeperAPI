@@ -8,6 +8,8 @@ import com.deviget.minesweeper.model.Board;
 import com.deviget.minesweeper.model.Cell;
 import com.deviget.minesweeper.model.GridFactory;
 import com.deviget.minesweeper.model.MarkType;
+import com.deviget.minesweeper.model.Row;
+import com.deviget.minesweeper.repository.BoardJPARepository;
 import com.deviget.minesweeper.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,21 +25,21 @@ public class BoardService {
   @Autowired
   private GridFactory gridFactory;
   @Autowired
-  private BoardRepository boardRepository;
+  private BoardJPARepository boardRepository;
 
   public String createBoard(final Integer rows, final Integer columns, final Integer mines) {
     String id = UUID.randomUUID().toString();
     Board board = new Board();
     board.setStatus(BoardStatus.PLAYING);
     board.setId(id);
-    List<List<Cell>> grid = gridFactory.create(rows, columns, mines);
+    List<Row> grid = gridFactory.create(rows, columns, mines);
     board.setGrid(grid);
-    boardRepository.store(board);
+    boardRepository.save(board);
     return id;
   }
 
   public Board retrieveBoard(final String boardId) {
-    Optional<Board> optionalBoard = boardRepository.retrieve(boardId);
+    Optional<Board> optionalBoard = boardRepository.findById(boardId);
     if (optionalBoard.isEmpty()) {
       throw new BoardNotFoundException(boardId);
     }

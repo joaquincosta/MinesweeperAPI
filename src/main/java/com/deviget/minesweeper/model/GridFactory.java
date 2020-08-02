@@ -10,18 +10,24 @@ import java.util.stream.Stream;
 @Component
 public class GridFactory {
 
-  public List<List<Cell>> create(final Integer rows, final Integer columns, final Integer mines) {
+  public List<Row> create(final Integer rows, final Integer columns, final Integer mines) {
     Integer totalCells = rows * columns;
     List<Integer> minesPositions = createMinesRandomPosition(mines, totalCells);
-    List<List<Cell>> grid = new ArrayList<>();
+    List<Row> grid = new ArrayList<>();
     for (int row = 0; row < rows; row++) {
-      List<Cell> rowCells = new ArrayList<>();
+      List<Cell> rowColumns = new ArrayList<>();
       for (int column = 0; column < columns; column++) {
         Integer position = (columns * row) + column;
         Boolean isMine = minesPositions.contains(position);
-        rowCells.add(Cell.builder().mark(MarkType.NONE).revealed(Boolean.FALSE).isMine(isMine).build());
+        Cell cell = new Cell();
+        cell.setMark(MarkType.NONE);
+        cell.setRevealed(Boolean.FALSE);
+        cell.setIsMine(isMine);
+        rowColumns.add(cell);
       }
-      grid.add(rowCells);
+      Row gridRow = new Row();
+      gridRow.setColumns(rowColumns);
+      grid.add(gridRow);
     }
     return grid;
   }

@@ -9,6 +9,7 @@ import com.deviget.minesweeper.dto.UserDTO;
 import com.deviget.minesweeper.model.Board;
 import com.deviget.minesweeper.model.Cell;
 import com.deviget.minesweeper.model.MarkType;
+import com.deviget.minesweeper.model.Row;
 import com.deviget.minesweeper.model.User;
 import org.springframework.core.convert.converter.Converter;
 
@@ -33,9 +34,9 @@ public class MinesweeperConverter {
       BoardDTO boardDTO = new BoardDTO();
       boardDTO.setStatus(board.getStatus().name());
       List<CellDTO> cells = new ArrayList<>();
-      List<List<Cell>> grid = board.getGrid();
+      List<Row> grid = board.getGrid();
       for (int row = 0 ; row < grid.size() ; row++) {
-        for (int column = 0 ; column < grid.get(row).size() ; column++) {
+        for (int column = 0 ; column < grid.get(row).getColumns().size() ; column++) {
           cells.add(convertCell(grid.get(row).get(column), row, column));
         }
       }

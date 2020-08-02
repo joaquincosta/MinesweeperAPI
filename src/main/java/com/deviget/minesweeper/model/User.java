@@ -2,14 +2,19 @@ package com.deviget.minesweeper.model;
 
 import lombok.*;
 
-import java.util.ArrayList;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
 @EqualsAndHashCode
+@Entity
 public class User {
-  private String username;
+  @Id
+  private String id;
+  @ElementCollection
   private List<String> boards;
 }
