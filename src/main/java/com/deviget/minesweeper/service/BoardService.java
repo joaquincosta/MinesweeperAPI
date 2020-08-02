@@ -46,7 +46,7 @@ public class BoardService {
 
   public Board updateBoard(final String boardId, final Integer row, final Integer column, final String type) {
     Board board = retrieveBoard(boardId);
-    if (BoardStatus.PLAYING.equals(board.getStatus())) {
+    if (!BoardStatus.PLAYING.equals(board.getStatus())) {
       throw new FinishedGameException(boardId);
     }
     UpdateBoardType updateType = UpdateBoardType.valueOf(type);
