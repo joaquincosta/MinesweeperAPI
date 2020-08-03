@@ -1,10 +1,10 @@
 package com.deviget.minesweeper.exception;
 
-public class BoardAndUserNotFoundException  extends RuntimeException {
+public class BoardAndUserNotMatch extends RuntimeException {
 
   private static final String ERROR_MSG = "Board: %s for User: %s not found";
 
-  public BoardAndUserNotFoundException(final Integer board, final String user) {
+  public BoardAndUserNotMatch(final Integer board, final String user) {
     super(String.format(ERROR_MSG, board, user));
   }
 }
