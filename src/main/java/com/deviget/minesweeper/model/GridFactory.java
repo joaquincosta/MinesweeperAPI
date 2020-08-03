@@ -3,7 +3,10 @@ package com.deviget.minesweeper.model;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,7 +15,7 @@ public class GridFactory {
 
   public List<Row> create(final Integer rows, final Integer columns, final Integer mines) {
     Integer totalCells = rows * columns;
-    List<Integer> minesPositions = createMinesRandomPosition(mines, totalCells);
+    Set<Integer> minesPositions = createMinesRandomPosition(mines, totalCells);
     List<Row> grid = new ArrayList<>();
     for (int row = 0; row < rows; row++) {
       List<Cell> rowColumns = new ArrayList<>();
@@ -32,12 +35,15 @@ public class GridFactory {
     return grid;
   }
 
-  private List<Integer> createMinesRandomPosition(final Integer mines, final Integer totalCells) {
-    return Stream.iterate(0, i -> i++).limit(mines)
-        .map(i -> createRandomPosition(totalCells)).collect(Collectors.toList());
+  private Set<Integer> createMinesRandomPosition(final Integer mines, final Integer totalCells) {
+    Set<Integer> minesPositions = new HashSet<>();
+    while (minesPositions.size() < mines) {
+      minesPositions.add(createRandomPosition(totalCells));
+    }
+    return minesPositions;
   }
 
   private Integer createRandomPosition(final Integer totalCells) {
-    return (int) ((Math.random() * (totalCells)));
+    return new Random().ints(0,totalCells).findFirst().getAsInt();
   }
 }
