@@ -32,7 +32,7 @@ public class MinesweeperFacade {
     Assert.isTrue(body.getRows() > 0, "Rows quantity must be greater than 0");
     Assert.isTrue(body.getColumns() > 0, "Columns quantity must be greater than 0");
     Assert.isTrue(body.getMines() > 0 && body.getMines() < body.getRows() * body.getColumns(),
-        "Mines quantity must be between 0 and board size (Rows x Columns)");
+        "Mines quantity must be between 1 and board size (Rows x Columns)");
     Integer id = boardService.createBoard(body.getRows(), body.getColumns(), body.getMines());
     userService.addBoardToUser(username, id);
     return conversionService.convert(id, IdDTO.class);

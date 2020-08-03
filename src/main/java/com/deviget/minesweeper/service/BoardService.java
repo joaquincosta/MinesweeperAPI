@@ -5,12 +5,10 @@ import com.deviget.minesweeper.commons.UpdateBoardType;
 import com.deviget.minesweeper.exception.BoardNotFoundException;
 import com.deviget.minesweeper.exception.FinishedGameException;
 import com.deviget.minesweeper.model.Board;
-import com.deviget.minesweeper.model.Cell;
 import com.deviget.minesweeper.model.GridFactory;
 import com.deviget.minesweeper.model.MarkType;
 import com.deviget.minesweeper.model.Row;
 import com.deviget.minesweeper.repository.BoardJPARepository;
-import com.deviget.minesweeper.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
