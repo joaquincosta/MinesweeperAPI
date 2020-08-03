@@ -1,7 +1,9 @@
 package com.deviget.minesweeper.model;
 
-import lombok.*;
-import org.hibernate.type.StandardBasicTypes;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
