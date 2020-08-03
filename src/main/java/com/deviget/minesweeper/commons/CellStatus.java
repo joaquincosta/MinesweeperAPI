@@ -2,9 +2,9 @@ package com.deviget.minesweeper.commons;
 
 public enum CellStatus {
 
-  HIDE,
+  HIDDEN,
   REVEALED,
   QUESTION,
-  FLAG
+  FLAGGED
 
 }

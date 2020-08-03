@@ -10,6 +10,5 @@ import lombok.Setter;
 public class UserBoardDTO {
 
   private String id;
-  private String status;
 
 }

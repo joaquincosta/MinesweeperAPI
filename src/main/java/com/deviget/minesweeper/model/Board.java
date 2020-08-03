@@ -33,13 +33,34 @@ public class Board {
   @Cascade(value = CascadeType.ALL)
   private List<Row> grid;
 
+  /**
+   * This method perform a play step.
+   * @param row the row index to be clicked.
+   * @param column the column index to be clicked
+   * @return Return the updated {@link Board}.
+   */
   public Board click(final Integer row, final Integer column) {
     Cell cell = grid.get(row).get(column);
     if (cell.getIsMine()) {
-      status = BoardStatus.GAME_OVER;
+      status = BoardStatus.LOSE;
       return this;
     }
     reveal(row, column);
+    if (boardCompleted()) {
+      status = BoardStatus.WON;
+    }
+    return this;
+  }
+
+  /**
+   * Mark and Unmark an specific cell.
+   * @param row the cell row index.
+   * @param column the cell column index.
+   * @param markType {@link MarkType} the mark type.
+   * @return the updated {@link Board}.
+   */
+  public Board mark(final Integer row, final Integer column, final MarkType markType) {
+    grid.get(row).get(column).setMark(markType);
     if (boardCompleted()) {
       status = BoardStatus.WON;
     }
@@ -58,22 +79,25 @@ public class Board {
         }
       });
     });
-
+    // Consider a board are completed when all non mine cell are revealed and mines are flagged.
     return (mines.get() + revealedCells.get()) == (grid.size() * grid.get(0).getColumns().size());
   }
 
+  /*
+   * This method reveal a cell and also their neighbors when is required.
+   */
   private void reveal(final Integer row, final Integer column) {
     List<Pair<Integer, Integer>> neighborsPosition = resolveNeighborsPosition(row, column);
     List<Cell> neighborCells = neighborsPosition.stream()
         .map(position -> grid.get(position.getLeft()).get(position.getRight()))
         .collect(Collectors.toList());
     Boolean revealed = grid.get(row).get(column).reveal();
+    // The base case: test if any neighbor is a mine or if actual cell was not changed in this instance.
     if (neighborCells.stream().anyMatch(cell -> cell.getIsMine()) || !revealed) {
       return;
     }
     neighborsPosition.stream().forEach(position ->
         reveal(position.getLeft(), position.getRight()));
-    //TODO: review reveal cell implementation with test
   }
 
 
@@ -120,11 +144,5 @@ public class Board {
     return validRow && validColumn;
   }
 
-  public Board mark(final Integer row, final Integer column, final MarkType markType) {
-    grid.get(row).get(column).setMark(markType);
-    if (boardCompleted()) {
-      status = BoardStatus.WON;
-    }
-    return this;
-  }
+
 }

@@ -4,6 +4,6 @@ public enum BoardStatus {
 
   PLAYING,
   WON,
-  GAME_OVER;
+  LOSE;
 
 }

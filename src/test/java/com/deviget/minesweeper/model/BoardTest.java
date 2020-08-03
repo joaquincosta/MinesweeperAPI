@@ -12,7 +12,7 @@ public class BoardTest {
   public void testClickInBomb() {
     Board board = boardFactory.createWithOneMineInZeroZero();
     board.click(0,0);
-    Assertions.assertTrue(BoardStatus.GAME_OVER.equals(board.getStatus()));
+    Assertions.assertTrue(BoardStatus.LOSE.equals(board.getStatus()));
   }
 
   @Test

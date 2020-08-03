@@ -11,6 +11,12 @@ import java.util.Set;
 @Component
 public class GridFactory {
 
+  /**
+   * @param rows the rows quantity.
+   * @param columns the columns quantity.
+   * @param mines the mines quantity.
+   * @return Returns a {@link List<Row>} that represent the grid game, with the requested mines in random positions.
+   */
   public List<Row> create(final Integer rows, final Integer columns, final Integer mines) {
     Integer totalCells = rows * columns;
     Set<Integer> minesPositions = createMinesRandomPosition(mines, totalCells);
@@ -35,6 +41,7 @@ public class GridFactory {
 
   private Set<Integer> createMinesRandomPosition(final Integer mines, final Integer totalCells) {
     Set<Integer> minesPositions = new HashSet<>();
+    // Sometimes Random.ints repeats values.
     while (minesPositions.size() < mines) {
       minesPositions.add(createRandomPosition(totalCells));
     }

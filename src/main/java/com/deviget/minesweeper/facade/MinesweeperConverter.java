@@ -50,9 +50,9 @@ public class MinesweeperConverter {
       cellDTO.setColumn(column);
       String status;
       if (MarkType.NONE.equals(cell.getMark())) {
-        status = cell.getRevealed() ? CellStatus.REVEALED.name() : CellStatus.HIDE.name();
+        status = cell.getRevealed() ? CellStatus.REVEALED.name() : CellStatus.HIDDEN.name();
       } else {
-        status = MarkType.FLAG.equals(cell.getMark()) ? MarkType.FLAG.name() : MarkType.QUESTION.name();
+        status = MarkType.FLAG.equals(cell.getMark()) ? CellStatus.FLAGGED.name() : CellStatus.QUESTION.name();
       }
       cellDTO.setStatus(status);
       return cellDTO;

@@ -8,154 +8,154 @@ info:
 host: "example.server"
 basePath: "/minesweeper"
 schemes:
-- "http"
+  - "http"
 paths:
   /boards:
     post:
       tags:
-      - "boards"
+        - "boards"
       summary: "Create a new minesweeper board"
       operationId: "createBoard"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name"
-        required: true
-        type: "string"
-      - name: "body"
-        in: "body"
-        description: "Create minesweeper board"
-        required: true
-        schema:
-          $ref: "#/definitions/CreateBoardDefinition"
+        - name: "username"
+          in: "query"
+          description: "The user name"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "Create minesweeper board"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateBoardDefinition"
       responses:
         "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/IdDefinition"
 
-  
+
   /boards/{boardId}:
     get:
       tags:
-      - "boards"
+        - "boards"
       summary: "Retrieve a board by id"
       operationId: "retrieveBoard"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name"
-        required: true
-        type: "string"
-      - name: "boardId"
-        in: "path"
-        description: "The board indentifier"
-        required: true
-        type: "string"
+        - name: "username"
+          in: "query"
+          description: "The user name"
+          required: true
+          type: "string"
+        - name: "boardId"
+          in: "path"
+          description: "The board indentifier"
+          required: true
+          type: "string"
       responses:
         "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/BoardDefinition"
-    
+
     patch:
       tags:
-      - "boards"
+        - "boards"
       summary: "Update a board"
       operationId: "updateBoard"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name"
-        required: true
-        type: "string"
-      - name: "boardId"
-        in: "path"
-        description: "The board indentifier"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Update board body"
-        required: true
-        schema:
-          $ref: "#/definitions/UpdateBoardDefinition"
+        - name: "username"
+          in: "query"
+          description: "The user name"
+          required: true
+          type: "string"
+        - name: "boardId"
+          in: "path"
+          description: "The board indentifier"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Update board body"
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateBoardDefinition"
       responses:
         "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/BoardDefinition"
-    
+
   /users:
     post:
       tags:
-      - "users"
+        - "users"
       summary: "Create a user"
       operationId: "createUser"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "body"
-        in: "body"
-        description: "Create a minesweeper user"
-        required: true
-        schema:
-          $ref: "#/definitions/UserCreationDefinition"
+        - name: "body"
+          in: "body"
+          description: "Create a minesweeper user"
+          required: true
+          schema:
+            $ref: "#/definitions/UserCreationDefinition"
       responses:
         "200":
           description: "Ok"
-          
+
   /users/{userName}:
     get:
       tags:
-      - "users"
+        - "users"
       produces:
-        - "application/json"    
+        - "application/json"
       parameters:
-      - name: "userName"
-        in: "path"
-        description: "The user name"
-        required: true
-        type: "string"
+        - name: "userName"
+          in: "path"
+          description: "The user name"
+          required: true
+          type: "string"
       responses:
         "200":
           description: "Ok"
           schema:
-            $ref: "#/definitions/UserDefinition"  
-        
-  
+            $ref: "#/definitions/UserDefinition"
+
+
 definitions:
-  
+
   IdDefinition:
     type: "object"
     properties:
       id:
         type: "string"
-        
+
   UserCreationDefinition:
     type: "object"
     properties:
       username:
         type: "string"
-      
+
   CreateBoardDefinition:
     type: "object"
     required:
-    - "rows"
-    - "columns"
-    - "mines"
+      - "rows"
+      - "columns"
+      - "mines"
     properties:
       rows:
         type: "integer"
@@ -163,22 +163,22 @@ definitions:
         type: "integer"
       mines:
         type: "integer"
-        
+
   BoardDefinition:
     type: "object"
     properties:
       status:
         type: "string"
         enum:
-        - "playing"
-        - "won"
-        - "game_over"
+          - "PLAYING"
+          - "WON"
+          - "LOSE"
       cells:
         type: "array"
         items:
           $ref: "#/definitions/CellDefinition"
-          
-  
+
+
   CellDefinition:
     type: "object"
     properties:
@@ -189,11 +189,11 @@ definitions:
       status:
         type: "string"
         enum:
-        - "hide"
-        - "revealed"
-        - "question"
-        - "flag"
-  
+          - "HIDDEN"
+          - "REVEALED"
+          - "QUESTION"
+          - "FLAGGED"
+
   UpdateBoardDefinition:
     type: "object"
     properties:
@@ -204,31 +204,26 @@ definitions:
       type:
         type: "string"
         enum:
-        - "reveal"
-        - "question"
-        - "flag"
-  
+          - "REVEAL"
+          - "QUESTION"
+          - "FLAG"
+          - "NONE"
+
   UserDefinition:
     type: "object"
     properties:
       boards:
         type: "array"
-        items: 
+        items:
           $ref: "#/definitions/UserBoardDefinition"
-  
+
   UserBoardDefinition:
     type: "object"
     properties:
-      id: 
+      id:
         type: "string"
-      status:
-        type: "string"
-        enum:
-        - "open"
-        - "won"
-        - "lost"
 
-    
+
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"

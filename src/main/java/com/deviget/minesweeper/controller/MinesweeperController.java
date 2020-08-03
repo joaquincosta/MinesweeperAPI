@@ -37,7 +37,7 @@ public class MinesweeperController {
 
   @ResponseBody
   @GetMapping("/boards/{boardId}")
-  public ResponseEntity<BoardDTO> retrieveBoard(@PathVariable Integer boardId, @RequestParam String username) {
+  public ResponseEntity<BoardDTO> getBoard(@PathVariable Integer boardId, @RequestParam String username) {
     BoardDTO boardDTO = minesweeperFacade.retrieveBoard(boardId, username);
     return new ResponseEntity<>(boardDTO, HttpStatus.OK);
   }
@@ -57,7 +57,7 @@ public class MinesweeperController {
   }
 
   @GetMapping("/users/{userName}")
-  public ResponseEntity<UserDTO> retrieveUser(@PathVariable String userName) {
+  public ResponseEntity<UserDTO> getUser(@PathVariable String userName) {
     UserDTO userDTO = minesweeperFacade.retrieveUser(userName);
     return new ResponseEntity<>(userDTO, HttpStatus.OK);
   }
