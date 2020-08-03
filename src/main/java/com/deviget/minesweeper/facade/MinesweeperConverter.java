@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 
 public class MinesweeperConverter {
 
-  public static class IdDtoConverter implements Converter<String, IdDTO> {
+  public static class IdDtoConverter implements Converter<Integer, IdDTO> {
     @Override
-    public IdDTO convert(final String id) {
-      return new IdDTO(id);
+    public IdDTO convert(final Integer id) {
+      return new IdDTO(id.toString());
     }
   }
 
@@ -65,7 +65,7 @@ public class MinesweeperConverter {
     public UserDTO convert(final User user) {
       UserDTO userDTO = new UserDTO();
       userDTO.setBoards(user.getBoards().stream()
-          .map(board -> UserBoardDTO.builder().id(board).build())
+          .map(board -> UserBoardDTO.builder().id(board.toString()).build())
           .collect(Collectors.toList()));
       return userDTO;
     }

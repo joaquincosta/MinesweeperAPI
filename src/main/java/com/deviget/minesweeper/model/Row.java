@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -22,8 +24,9 @@ public class Row {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private String id;
+  private Integer id;
   @ElementCollection
+  @Cascade(value = CascadeType.ALL)
   private List<Cell> columns;
 
   public Cell get(Integer i){

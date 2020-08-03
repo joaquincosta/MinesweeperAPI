@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @Service
@@ -27,26 +26,25 @@ public class BoardService {
   @Autowired
   private BoardJPARepository boardRepository;
 
-  public String createBoard(final Integer rows, final Integer columns, final Integer mines) {
-    String id = UUID.randomUUID().toString();
+  public Integer createBoard(final Integer rows, final Integer columns, final Integer mines) {
     Board board = new Board();
     board.setStatus(BoardStatus.PLAYING);
-    board.setId(id);
     List<Row> grid = gridFactory.create(rows, columns, mines);
     board.setGrid(grid);
     boardRepository.save(board);
-    return id;
+    return board.getId();
   }
 
-  public Board retrieveBoard(final String boardId) {
+  public Board retrieveBoard(final Integer boardId) {
     Optional<Board> optionalBoard = boardRepository.findById(boardId);
     if (optionalBoard.isEmpty()) {
       throw new BoardNotFoundException(boardId);
     }
-    return optionalBoard.get();
+    Board board = optionalBoard.get();
+    return board;
   }
 
-  public Board updateBoard(final String boardId, final Integer row, final Integer column, final String type) {
+  public Board updateBoard(final Integer boardId, final Integer row, final Integer column, final String type) {
     Board board = retrieveBoard(boardId);
     if (!BoardStatus.PLAYING.equals(board.getStatus())) {
       throw new FinishedGameException(boardId);
@@ -56,7 +54,7 @@ public class BoardService {
       return board.mark(row, column, MarkType.valueOf(type));
     }
     board = board.click(row, column);
-
+    boardRepository.save(board);
     return board;
   }
 }

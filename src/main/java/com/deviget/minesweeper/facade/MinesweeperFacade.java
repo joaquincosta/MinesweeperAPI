@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 @Component
 public class MinesweeperFacade {
 
@@ -26,12 +28,12 @@ public class MinesweeperFacade {
   private ConversionService conversionService;
 
   public IdDTO createBoard(final CreateBoardBody body, final String username) {
-    String id = boardService.createBoard(body.getRows(), body.getColumns(), body.getMines());
+    Integer id = boardService.createBoard(body.getRows(), body.getColumns(), body.getMines());
     userService.addBoardToUser(username, id);
     return conversionService.convert(id, IdDTO.class);
   }
 
-  public BoardDTO retrieveBoard(final String boardId, final String username) {
+  public BoardDTO retrieveBoard(final Integer boardId, final String username) {
     if (!userService.matchUserWithBoard(username, boardId)) {
       throw new BoardAndUserNotFoundException(boardId, username);
     }
@@ -47,7 +49,7 @@ public class MinesweeperFacade {
     return conversionService.convert(user, UserDTO.class);
   }
 
-  public BoardDTO updateBoard(final UpdateBoardBody body, final String boardId, final String username) {
+  public BoardDTO updateBoard(final UpdateBoardBody body, final Integer boardId, final String username) {
     if (!userService.matchUserWithBoard(username, boardId)) {
       throw new BoardAndUserNotFoundException(boardId, username);
     }

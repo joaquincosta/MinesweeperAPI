@@ -37,14 +37,14 @@ public class MinesweeperController {
 
   @ResponseBody
   @GetMapping("/boards/{boardId}")
-  public ResponseEntity<BoardDTO> retrieveBoard(@PathVariable String boardId, @RequestParam String username) {
+  public ResponseEntity<BoardDTO> retrieveBoard(@PathVariable Integer boardId, @RequestParam String username) {
     BoardDTO boardDTO = minesweeperFacade.retrieveBoard(boardId, username);
     return new ResponseEntity<>(boardDTO, HttpStatus.OK);
   }
 
   @ResponseBody
   @PatchMapping("/boards/{boardId}")
-  public ResponseEntity<BoardDTO> updateBoard(@RequestBody UpdateBoardBody body, @PathVariable String boardId,
+  public ResponseEntity<BoardDTO> updateBoard(@RequestBody UpdateBoardBody body, @PathVariable Integer boardId,
                                               @RequestParam String username) {
     BoardDTO boardDTO = minesweeperFacade.updateBoard(body, boardId, username);
     return new ResponseEntity<>(boardDTO, HttpStatus.OK);

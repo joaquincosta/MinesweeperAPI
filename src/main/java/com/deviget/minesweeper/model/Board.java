@@ -6,8 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -22,16 +26,20 @@ import java.util.stream.Collectors;
 @Entity
 public class Board {
   @Id
-  private String id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
   private BoardStatus status;
   @OneToMany
+  @Cascade(value = CascadeType.ALL)
   private List<Row> grid;
 
   public Board click(final Integer row, final Integer column) {
-    if (grid.get(row).get(column).getIsMine()) {
+    Cell cell = grid.get(row).get(column);
+    if (cell.getIsMine()) {
       status = BoardStatus.GAME_OVER;
+      return this;
     }
-    reveal(row,column);
+    reveal(row, column);
     if (boardCompleted()) {
       status = BoardStatus.WON;
     }
@@ -43,7 +51,7 @@ public class Board {
     AtomicReference<Integer> revealedCells = new AtomicReference<>(0);
     grid.stream().forEach(row -> {
       row.getColumns().stream().forEach(cell -> {
-        if (cell.getIsMine()) {
+        if (cell.getIsMine() && cell.flagged()) {
           mines.getAndSet(mines.get() + 1);
         } else if (cell.getRevealed()) {
           revealedCells.getAndSet(revealedCells.get() + 1);
@@ -55,18 +63,17 @@ public class Board {
   }
 
   private void reveal(final Integer row, final Integer column) {
+    List<Pair<Integer, Integer>> neighborsPosition = resolveNeighborsPosition(row, column);
+    List<Cell> neighborCells = neighborsPosition.stream()
+        .map(position -> grid.get(position.getLeft()).get(position.getRight()))
+        .collect(Collectors.toList());
     Boolean revealed = grid.get(row).get(column).reveal();
-    if (revealed) {
-      List<Pair<Integer, Integer>> neighborsPosition = resolveNeighborsPosition(row, column);
-      List<Cell> neighborCells = neighborsPosition.stream()
-          .map(position -> grid.get(position.getLeft()).get(position.getRight()))
-          .collect(Collectors.toList());
-      if (neighborCells.stream().noneMatch(cell -> cell.getIsMine())) {
-        neighborsPosition.stream().forEach(position ->
-          reveal(position.getLeft(),position.getRight())
-        );
-      }
+    if (neighborCells.stream().anyMatch(cell -> cell.getIsMine()) || !revealed) {
+      return;
     }
+    neighborsPosition.stream().forEach(position ->
+        reveal(position.getLeft(), position.getRight()));
+    //TODO: review reveal cell implementation with test
   }
 
 
@@ -82,21 +89,21 @@ public class Board {
     }
     Pair<Integer, Integer> northEast = Pair.of(row - 1, column + 1);
     if (validPosition(northEast)) {
-        neighborsPosition.add(northEast);
+      neighborsPosition.add(northEast);
     }
     Pair<Integer, Integer> east = Pair.of(row, column + 1);
     if (validPosition(east)) {
       neighborsPosition.add(east);
     }
-    Pair<Integer, Integer> southEast = Pair.of(row +1, column + 1);
+    Pair<Integer, Integer> southEast = Pair.of(row + 1, column + 1);
     if (validPosition(southEast)) {
       neighborsPosition.add(southEast);
     }
-    Pair<Integer, Integer> south = Pair.of(row +1, column);
+    Pair<Integer, Integer> south = Pair.of(row + 1, column);
     if (validPosition(south)) {
       neighborsPosition.add(south);
     }
-    Pair<Integer, Integer> southWest = Pair.of(row +1, column - 1);
+    Pair<Integer, Integer> southWest = Pair.of(row + 1, column - 1);
     if (validPosition(southWest)) {
       neighborsPosition.add(southWest);
     }
@@ -115,6 +122,9 @@ public class Board {
 
   public Board mark(final Integer row, final Integer column, final MarkType markType) {
     grid.get(row).get(column).setMark(markType);
+    if (boardCompleted()) {
+      status = BoardStatus.WON;
+    }
     return this;
   }
 }

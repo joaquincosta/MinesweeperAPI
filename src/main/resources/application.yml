@@ -3,8 +3,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        ddl-auto: true
+        ddl-auto: create
+        hbm2ddl:
+          auto: validate
   datasource:
-    url: jdbc:postgresql://localhost:5432/minesweeper
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://ec2-34-193-232-231.compute-1.amazonaws.com:5432/d3jlal9pd86npo
+    username: odlrjophjigtav
+    password: 4b00789cc92c35b61b048c242854ee47c24c02df718f7a6b2fac2ed7a790b3c4

@@ -15,7 +15,7 @@ public class UserRepository {
   }
 
   public Optional<User> retrieve(final String username) {
-    return users.stream().filter(user -> user.getId().equals(username)).findFirst();
+    return users.stream().filter(user -> user.getName().equals(username)).findFirst();
   }
 
 }

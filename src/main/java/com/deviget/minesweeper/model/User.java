@@ -1,9 +1,12 @@
 package com.deviget.minesweeper.model;
 
 import lombok.*;
+import org.hibernate.type.StandardBasicTypes;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.List;
 
@@ -11,10 +14,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@Entity
+@Entity(name = "player")
 public class User {
   @Id
-  private String id;
+  @GeneratedValue(strategy= GenerationType.AUTO)
+  private Integer id;
+  private String name;
   @ElementCollection
-  private List<String> boards;
+  private List<Integer> boards;
 }

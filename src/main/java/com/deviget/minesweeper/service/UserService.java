@@ -17,29 +17,31 @@ public class UserService {
   private UserJPARepository userRepository;
 
   public void createUser(final String username) {
-    Optional<User> optionalUser = userRepository.findById(username);
+    Optional<User> optionalUser = userRepository.findByName(username);
     if (!optionalUser.isEmpty()) {
       throw new DuplicatedUserException(username);
     }
     User user = new User();
-    user.setId(username);
+    user.setName(username);
     user.setBoards(new ArrayList<>());
     userRepository.save(user);
   }
 
   public User findUser(final String username) {
-    Optional<User> optionalUser = userRepository.findById(username);
+    Optional<User> optionalUser = userRepository.findByName(username);
     if (optionalUser.isEmpty()) {
       throw new UserNotFoundException(username);
     }
     return optionalUser.get();
   }
 
-  public void addBoardToUser(final String username, final String boardId) {
-    findUser(username).getBoards().add(boardId);
+  public void addBoardToUser(final String username, final Integer boardId) {
+    User user = findUser(username);
+    user.getBoards().add(boardId);
+    userRepository.save(user);
   }
 
-  public Boolean matchUserWithBoard(final String username, final String boardId) {
+  public Boolean matchUserWithBoard(final String username, final Integer boardId) {
     User user = findUser(username);
     return user.getBoards().stream().anyMatch(userBoard -> userBoard.equals(boardId));
   }
